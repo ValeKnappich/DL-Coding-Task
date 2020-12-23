@@ -1,3 +1,5 @@
+from config import config
+
 import torch
 from torch import nn
 from torch.nn import functional as F
@@ -9,7 +11,7 @@ from transformers import BertTokenizer, BertModel
 
 class IntentAndEntityBERT(pl.LightningModule):
 
-  def __init__(self, sequence_length, num_intents, num_entities, config):
+  def __init__(self, sequence_length, num_intents, num_entities):
     super().__init__()
     self.batch_size = config["batch_size"]
     self.bert_lr = config["bert_lr"]
@@ -46,8 +48,7 @@ class IntentAndEntityBERT(pl.LightningModule):
             lambda epoch: 1,
             lambda epoch: 1 if epoch <= 2 else 0.9**epoch,
             lambda epoch: 1
-        ]
-                                                 
+        ]                                          
     )
     return [opt], [lr_sched]
 
