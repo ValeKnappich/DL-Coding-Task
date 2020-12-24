@@ -1,4 +1,4 @@
-from config import config
+from config import *
 
 import torch
 from torch import nn
@@ -11,13 +11,16 @@ from transformers import BertTokenizer, BertModel
 
 class IntentAndEntityBERT(pl.LightningModule):
 
-  def __init__(self, sequence_length, num_intents, num_entities):
+  def __init__(self):
     super().__init__()
-    self.batch_size = config["batch_size"]
-    self.bert_lr = config["bert_lr"]
-    self.head_lr = config["head_lr"]
-    self.model_name = config["model_name"]
-    self.sequence_length = sequence_length
+    self.batch_size = config.batch_size
+    self.bert_lr = config.bert_lr
+    self.head_lr = config.head_lr
+    self.model_name = config.model_name
+    self.sequence_length = config.sequence_length
+
+    num_intents = len(UNIQUE_INTENTS)
+    num_entities = len(UNIQUE_ENTITIES)
 
     self.bert = BertModel.from_pretrained(self.model_name)
     self.linear_intent = nn.Linear(self.sequence_length * 768, num_intents)
