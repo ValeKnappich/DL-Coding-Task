@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 config = {
     "batch_size": 64,
     "bert_lr": 5e-6, 
@@ -5,9 +7,15 @@ config = {
     "model_name": "bert-base-uncased",
     "train_path": "train.json",
     "dev_path": "dev.json",
+    "dev_out_path": "dev_labelled.json",
+    "ckpt_path": "model.ckpt",
     "test_size": 0.1,
-    "sequence_length": 40
+    "sequence_length": 40,
 }
+
+# Make config values accessible by attribute, e.g. config.batch_size
+Config = namedtuple("Config", config.keys())
+config = Config(**config)
 
 UNIQUE_INTENTS = ['SearchCreativeWork', 'PlayMusic', 'RateBook', 'SearchScreeningEvent', 'BookRestaurant', 'AddToPlaylist', 'GetWeather']
 INTENT2ID = {intent: i for i, intent in enumerate(UNIQUE_INTENTS)}

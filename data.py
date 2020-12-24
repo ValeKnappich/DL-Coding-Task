@@ -30,11 +30,11 @@ class BERTDataModule(pl.LightningDataModule):
 
   def __init__(self, mode="fit", no_split=False):
     super().__init__()
-    self.batch_size = config["batch_size"]
-    self.tokenizer = BertTokenizer.from_pretrained(config["model_name"])
-    self.path = config["train_path"] if mode == "fit" else config["test_path"]
-    self.test_size = config["test_size"] if not no_split else None
-    self.sequence_length = config["sequence_length"]
+    self.batch_size = config.batch_size
+    self.tokenizer = BertTokenizer.from_pretrained(config.model_name)
+    self.path = config.train_path if mode == "fit" else config.dev_path
+    self.test_size = config.test_size if not no_split else None
+    self.sequence_length = config.sequence_length
     self.setup(mode)
 
   def setup(self, mode):
@@ -169,7 +169,10 @@ class BERTDataModule(pl.LightningDataModule):
           entities[j][1] = char_start
           entities[j][2] = char_end
         except ValueError as e:
-          warn("Could not transform utterance to IOB, empty alignment")
+          warn("Could not extract entity, empty alignment")
+          continue
+        except IndexError as e:
+          warn("Could not extract entities, overlapping ranges")
           continue
 
       result[str(i)] = {
