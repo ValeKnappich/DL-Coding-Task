@@ -206,6 +206,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -309,6 +316,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -332,6 +346,10 @@
 <li><strong>data.py</strong>: Defines the pl.LightningDataModule, that implements data loading and preprocessing. Executing the script will run and end-to-end test, weather the conversion between formats worked correctly for the training data.</li>
 <li><strong>test.py</strong>: Used to perform inference on the dev set.</li>
 </ul>
+<h2 id="usage">Usage</h2>
+<pre><code class="language-bash">python train.py         # train the model, checkpoint is saved to disk
+python test.py          # loads the dumped model, predicts the classes and outputs the results to disk
+</code></pre>
                 
               
               
