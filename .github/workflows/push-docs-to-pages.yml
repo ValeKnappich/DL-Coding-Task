@@ -27,7 +27,7 @@ jobs:
       # uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
       uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
-        REPOSITORY_NAME: ValeKnappich/ValeKnappich.github.io.git 
+        REPOSITORY_NAME: ValeKnappich/ValeKnappich.github.io
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # This is the branch you wish to deploy to, for example gh-pages or docs.
         BRANCH: main
