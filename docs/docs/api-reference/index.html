@@ -14,7 +14,7 @@
     
     
       
-        <title>Test - Intent and Entity Classifier</title>
+        <title>API Reference - Intent and Entity Classifier</title>
       
     
     
@@ -57,6 +57,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#model" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -85,7 +90,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Test
+              API Reference
             
           </span>
         </div>
@@ -177,8 +182,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../model/" class="md-nav__link">
-      Model
+    <a href="../task/" class="md-nav__link">
+      Task Overview
     </a>
   </li>
 
@@ -190,8 +195,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../training/" class="md-nav__link">
-      Training
+    <a href="../approach/" class="md-nav__link">
+      Approach Overview
     </a>
   </li>
 
@@ -203,21 +208,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../data/" class="md-nav__link">
-      Data
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="../config/" class="md-nav__link">
-      Config
+    <a href="../results/" class="md-nav__link">
+      Results
     </a>
   </li>
 
@@ -234,10 +226,89 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        API Reference
+        <span class="md-nav__icon md-icon"></span>
+      </label>
     
     <a href="./" class="md-nav__link md-nav__link--active">
-      Test
+      API Reference
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#intentandentitymodel-objects" class="md-nav__link">
+    IntentAndEntityModel Objects
+  </a>
+  
+    <nav class="md-nav" aria-label="IntentAndEntityModel Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forward" class="md-nav__link">
+    forward
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure_optimizers" class="md-nav__link">
+    configure_optimizers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loss" class="md-nav__link">
+    loss
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accuracy" class="md-nav__link">
+    accuracy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training_step" class="md-nav__link">
+    training_step
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation_step" class="md-nav__link">
+    validation_step
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -249,15 +320,189 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#intentandentitymodel-objects" class="md-nav__link">
+    IntentAndEntityModel Objects
+  </a>
+  
+    <nav class="md-nav" aria-label="IntentAndEntityModel Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forward" class="md-nav__link">
+    forward
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure_optimizers" class="md-nav__link">
+    configure_optimizers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loss" class="md-nav__link">
+    loss
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accuracy" class="md-nav__link">
+    accuracy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training_step" class="md-nav__link">
+    training_step
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation_step" class="md-nav__link">
+    validation_step
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Test</h1>
-                
-                
+                <p><a name="model"></a></p>
+<h1 id="model">model</h1>
+<p><a name="model.IntentAndEntityModel"></a></p>
+<h2 id="intentandentitymodel-objects">IntentAndEntityModel Objects</h2>
+<pre><code class="language-python">class IntentAndEntityModel(pl.LightningModule)
+</code></pre>
+<p><a name="model.IntentAndEntityModel.forward"></a></p>
+<h4 id="forward">forward</h4>
+<pre><code class="language-python"> | forward(input_ids: torch.Tensor, attention_mask: torch.Tensor) -&gt; Tuple[torch.Tensor, torch.Tensor]
+</code></pre>
+<p>Forward pass</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>input_ids</code> <em>torch.Tensor</em> - [description]</li>
+<li><code>attention_mask</code> <em>torch.Tensor</em> - [description]</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<p>Tuple[torch.Tensor, torch.Tensor]: [description]</p>
+<p><a name="model.IntentAndEntityModel.configure_optimizers"></a></p>
+<h4 id="configure_optimizers">configure_optimizers</h4>
+<pre><code class="language-python"> | configure_optimizers() -&gt; Tuple[
+ |         List[torch.optim.Optimizer], List[torch.optim.lr_scheduler._LRScheduler]
+ |     ]
+</code></pre>
+<p>Configure optimizer and lr scheduler</p>
+<p><strong>Returns</strong>:</p>
+<p>Tuple[List[torch.optim.Optimizer], List[torch.optim.lr_scheduler._LRScheduler]]: [description]</p>
+<p><a name="model.IntentAndEntityModel.loss"></a></p>
+<h4 id="loss">loss</h4>
+<pre><code class="language-python"> | loss(intent_logits: torch.Tensor, ner_logits: torch.Tensor, intent_labels: torch.Tensor, ner_labels: torch.Tensor) -&gt; Tuple[torch.Tensor, torch.Tensor]
+</code></pre>
+<p>Calculate the individual losses for intent and ner respectively</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>intent_logits</code> <em>torch.Tensor</em> - [description]</li>
+<li><code>ner_logits</code> <em>torch.Tensor</em> - [description]</li>
+<li><code>intent_labels</code> <em>torch.Tensor</em> - [description]</li>
+<li><code>ner_labels</code> <em>torch.Tensor</em> - [description]</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<p>Tuple[torch.Tensor, torch.Tensor]: [description]</p>
+<p><a name="model.IntentAndEntityModel.accuracy"></a></p>
+<h4 id="accuracy">accuracy</h4>
+<pre><code class="language-python"> | accuracy(logits: torch.Tensor, labels: torch.Tensor) -&gt; float
+</code></pre>
+<p>Calculate accuracy for logits and labels</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>logits</code> <em>torch.Tensor</em> - [description]</li>
+<li><code>labels</code> <em>torch.Tensor</em> - [description]</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>float</code> - [description]</li>
+</ul>
+<p><a name="model.IntentAndEntityModel.training_step"></a></p>
+<h4 id="training_step">training_step</h4>
+<pre><code class="language-python"> | training_step(batch: dict, batch_idx: int) -&gt; torch.Tensor
+</code></pre>
+<p>Training step</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>batch</code> <em>dict</em> - [description]</li>
+<li><code>batch_idx</code> <em>int</em> - [description]</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>torch.Tensor</code> - [description]</li>
+</ul>
+<p><a name="model.IntentAndEntityModel.validation_step"></a></p>
+<h4 id="validation_step">validation_step</h4>
+<pre><code class="language-python"> | validation_step(batch: dict, batch_idx: int)
+</code></pre>
+<p>Validation step</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>batch</code> <em>dict</em> - [description]</li>
+<li><code>batch_idx</code> <em>int</em> - [description]</li>
+</ul>
+<p><a name="config"></a></p>
+<h1 id="config">config</h1>
+<p><a name="data"></a></p>
+<h1 id="data">data</h1>
+<p><a name="data.DataModule"></a></p>
+<h2 id="datamodule-objects">DataModule Objects</h2>
+<pre><code class="language-python">class DataModule(pl.LightningDataModule)
+</code></pre>
+<p><a name="data.DataModule.load_and_clean"></a></p>
+<h4 id="load_and_clean">load_and_clean</h4>
+<pre><code class="language-python"> | load_and_clean() -&gt; dict
+</code></pre>
+<p>Load data from disk and remove characters that are not supported by the tokenizer</p>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>dict</code> - [description]</li>
+</ul>
+<p><a name="train"></a></p>
+<h1 id="train">train</h1>
                 
               
               
@@ -276,7 +521,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../config/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../results/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -285,7 +530,7 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Config
+                Results
               </div>
             </div>
           </a>

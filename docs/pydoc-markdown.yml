@@ -13,21 +13,33 @@ renderer:
     - title: Home
       name: index
       source: ../README.md
-    - title: Model
+    - title: Task Overview
+      name: task
+      source: task.md
+    - title: Approach Overview
+      name: approach
+      source: approach.md
+    - title: Results
+      name: results
+      source: results.md
+    - title: API Reference
       contents:
-      - model.*
-    - title: Training
-      contents:
-      - train.*
-    - title: Data
-      contents:
-      - data.*
-    - title: Config
-      contents:
-      - config.*
-    - title: Test
-      contents:
-      - test.*
+      - "*"
+    # - title: Model
+    #   contents:
+    #   - model.*
+    # - title: Training
+    #   contents:
+    #   - train.*
+    # - title: Data
+    #   contents:
+    #   - data.*
+    # - title: Config
+    #   contents:
+    #   - config.*
+    # - title: Test
+    #   contents:
+    #   - test.*
   mkdocs_config:
     site_name: Intent and Entity Classifier
     theme: material 

@@ -14,7 +14,7 @@
     
     
       
-        <title>Data - Intent and Entity Classifier</title>
+        <title>Results - Intent and Entity Classifier</title>
       
     
     
@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#data" class="md-skip">
+        <a href="#results" class="md-skip">
           Skip to content
         </a>
       
@@ -90,7 +90,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Data
+              Results
             
           </span>
         </div>
@@ -182,8 +182,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../model/" class="md-nav__link">
-      Model
+    <a href="../task/" class="md-nav__link">
+      Task Overview
     </a>
   </li>
 
@@ -195,8 +195,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../training/" class="md-nav__link">
-      Training
+    <a href="../approach/" class="md-nav__link">
+      Approach Overview
     </a>
   </li>
 
@@ -216,51 +216,9 @@
       
     
     
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Data
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
     <a href="./" class="md-nav__link md-nav__link--active">
-      Data
+      Results
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#datamodule-objects" class="md-nav__link">
-    DataModule Objects
-  </a>
-  
-    <nav class="md-nav" aria-label="DataModule Objects">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#load_and_clean" class="md-nav__link">
-    load_and_clean
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
     
   </li>
 
@@ -272,21 +230,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../config/" class="md-nav__link">
-      Config
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="../test/" class="md-nav__link">
-      Test
+    <a href="../api-reference/" class="md-nav__link">
+      API Reference
     </a>
   </li>
 
@@ -309,34 +254,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#datamodule-objects" class="md-nav__link">
-    DataModule Objects
-  </a>
-  
-    <nav class="md-nav" aria-label="DataModule Objects">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#load_and_clean" class="md-nav__link">
-    load_and_clean
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -348,21 +265,7 @@
               
                 
                 
-                <p><a name="data"></a></p>
-<h1 id="data">data</h1>
-<p><a name="data.DataModule"></a></p>
-<h2 id="datamodule-objects">DataModule Objects</h2>
-<pre><code class="language-python">class DataModule(pl.LightningDataModule)
-</code></pre>
-<p><a name="data.DataModule.load_and_clean"></a></p>
-<h4 id="load_and_clean">load_and_clean</h4>
-<pre><code class="language-python"> | load_and_clean() -&gt; dict
-</code></pre>
-<p>Load data from disk and remove characters that are not supported by the tokenizer</p>
-<p><strong>Returns</strong>:</p>
-<ul>
-<li><code>dict</code> - [description]</li>
-</ul>
+                <h1 id="results">Results</h1>
                 
               
               
@@ -381,7 +284,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../training/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../approach/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -390,19 +293,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Training
+                Approach Overview
               </div>
             </div>
           </a>
         
         
-          <a href="../config/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../api-reference/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Config
+                API Reference
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
