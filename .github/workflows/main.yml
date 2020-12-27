@@ -31,7 +31,7 @@ jobs:
       
       # Install
       - name: Install pydoc-markdown
-        run: pip3 install pydoc-markdown
+        run: pip install pydoc-markdown --user
 
       - name: Compile docs
         run: |
