@@ -7,9 +7,9 @@ from torch.nn import functional as F
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
-from transformers import BertTokenizer, BertModel
+from transformers import AutoModel
 
-class IntentAndEntityBERT(pl.LightningModule):
+class IntentAndEntityModel(pl.LightningModule):
 
   def __init__(self):
     super().__init__()
@@ -22,7 +22,7 @@ class IntentAndEntityBERT(pl.LightningModule):
     num_intents = len(UNIQUE_INTENTS)
     num_entities = len(UNIQUE_ENTITIES)
 
-    self.bert = BertModel.from_pretrained(self.model_name)
+    self.bert = AutoModel.from_pretrained(self.model_name)
     self.linear_intent = nn.Linear(self.sequence_length * 768, num_intents)
     self.linear_ner = nn.Linear(768, num_entities * 2 + 1)
 

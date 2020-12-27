@@ -3,7 +3,7 @@ from config import *
 import pytorch_lightning as pl
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import BertTokenizer
+from transformers import AutoTokenizer
 import tokenizations as tk
 from sklearn.model_selection import train_test_split
 
@@ -11,6 +11,7 @@ import pandas as pd
 import json
 from math import ceil
 from warnings import warn
+import re
 
 
 class NLUDataSet(Dataset):
@@ -26,22 +27,56 @@ class NLUDataSet(Dataset):
 
 
 
-class BERTDataModule(pl.LightningDataModule):
+class DataModule(pl.LightningDataModule):
 
   def __init__(self, mode="fit", no_split=False):
     super().__init__()
     self.batch_size = config.batch_size
-    self.tokenizer = BertTokenizer.from_pretrained(config.model_name)
+    self.pretrained_model_name = config.model_name
+    self.tokenizer = AutoTokenizer.from_pretrained(config.model_name)
     self.path = config.train_path if mode == "fit" else config.dev_path
     self.test_size = config.test_size if not no_split else None
     self.sequence_length = config.sequence_length
+    self.replace_char = config.replace_char
     self.setup(mode)
+
+
+  def load_and_clean(self):
+    def replace_all(s, unsupported, replacement=self.replace_char):
+      for unsup_char in unsupported:
+        s = s.replace(unsup_char, replacement)
+      return s
+    data_dict = json.load(open(self.path, "r"))
+    # Get unique characters
+    chars = set("".join(i["text"] for i in data_dict.values()))
+    # Get unsupported chars by comparing it with tokenizer output
+    unsupported_chars = []
+    for char in chars:
+      tok_char = self.tokenizer.tokenize(char)
+      if len(tok_char) != 1 or tok_char[0] != char:
+        unsupported_chars.append(char)
+    if " " in unsupported_chars:
+      unsupported_chars.remove(" ")
+    self.unsupported_chars = set(unsupported_chars)
+    # Clean dict
+    for i in data_dict:
+      data_dict[i]["uncleaned"] = data_dict[i]["text"]
+      data_dict[i]["text"] = replace_all(data_dict[i]["text"], self.unsupported_chars)
+    return data_dict
+
+
+
+  added_chars = {
+    # chars that are added by the respective tokenizer
+    "bert-base-uncased": "#",
+    "roberta-base": "Ġ"
+  }
+
 
   def setup(self, mode):
     # Load data from disk
-    data_dict = json.load(open(self.path, "r"))
+    data_dict = self.load_and_clean()
     self.data_list = [data_dict[i] for i in data_dict]
-    # input_ids, attention_mask, intents, token_labels
     encodings = self.tokenizer(
         [instance["text"] for instance in self.data_list], 
         padding="max_length", truncation=True, max_length=self.sequence_length
@@ -51,7 +86,8 @@ class BERTDataModule(pl.LightningDataModule):
     # training mode
     if mode == "fit":
       intents = [INTENT2ID[instance["intent"]] for instance in self.data_list]
-      tokens = [self.tokenizer.tokenize(instance["text"]) for instance in self.data_list] 
+      tokens = [self.tokenizer.tokenize(instance["text"]) for instance in self.data_list]
+      tokens = [tok[:self.sequence_length] for tok in tokens] # truncate to max length
       token_labels = self.format2IOB(tokens)
       data = {
           "input_ids": input_ids,
@@ -90,9 +126,10 @@ class BERTDataModule(pl.LightningDataModule):
     return DataLoader(self.test, batch_size=self.batch_size, shuffle=False, num_workers=4)
 
 
-  def format2IOB(self, bert_tokens_matrix):
+  def format2IOB(self, tokens_matrix):
+    added_char = self.added_chars[self.pretrained_model_name]
     token_labels = []
-    for instance, bert_tokens in zip(self.data_list, bert_tokens_matrix):
+    for instance, tokens in zip(self.data_list, tokens_matrix):
       # Initialize with outside tokens
       token_labels_sentence = [ENTITY2ID["O"] for _ in range(self.sequence_length)]
       # Iterate over entities present in the sentence
@@ -101,18 +138,18 @@ class BERTDataModule(pl.LightningDataModule):
         num_whitespaces_before = instance["text"][:start].count(" ")
         start_prime = start - num_whitespaces_before
         char_count = 0
-        # Iterate over bert tokens and check if index is reached
-        for i, bert_token in enumerate(bert_tokens):
-          char_count += len(bert_token) - bert_token.count("#")
+        # Iterate over tokens and check if index is reached
+        for i, token in enumerate(tokens):
+          char_count += len(token) - token.count(added_char)
           if char_count > start_prime:
             # Assign begin token
             token_labels_sentence[i] = ENTITY2ID[f"B-{entity}"]
             # Check how many inside tokens there are
             len_prime = end - start - instance["text"][start:end].count(" ") # entity length without whitespaces
-            char_count = len(bert_token) - bert_token.count("#")
+            char_count = len(token) - token.count(added_char)
             token_count = 0
-            while char_count <= len_prime and i + token_count + 1 < len(bert_tokens):
-              char_count += len(bert_tokens[i + token_count + 1]) - bert_tokens[i + token_count + 1].count("#")
+            while char_count <= len_prime and i + token_count + 1 < len(tokens):
+              char_count += len(tokens[i + token_count + 1]) - tokens[i + token_count + 1].count(added_char)
               token_count += 1
             inside_token = ENTITY2ID[f"I-{entity}"]
             token_labels_sentence[i+1:i+token_count+1] = [inside_token for _ in range(token_count)]
@@ -149,31 +186,42 @@ class BERTDataModule(pl.LightningDataModule):
     if len(set([e[0] for e in entities])) != len(entities):
       warn("Multiple entries for the same entity")  
     return entities
-    
+  
+
+  def _find_best_match(self, matches, tokens, t_start, t_end):
+    # If regex matches multiple times, choose best
+    if self.pretrained_model_name != "roberta-base":
+      warn("Model not supported in _find_best_match")
+    num_chars = sum([len(t) for t in tokens[:t_end+1]])
+    return sorted(matches, key=lambda m: abs(m[1] - num_chars))[0]
    
   def format2original(self, intents, token_labels_matrix):
     result = {}
     intents = [ID2INTENT[intent] for intent in intents]
     for i, (intent, token_labels, raw) in enumerate(zip(intents, token_labels_matrix, self.data_list)):
-      ws_tokens = raw["text"].split()
-      bert_tokens = self.tokenizer.tokenize(raw["text"])
-      ws2bert, bert2ws = tk.get_alignments(ws_tokens, bert_tokens)
+      tokens = self.tokenizer.tokenize(raw["text"])[:self.sequence_length]
       entities = self._get_entities(token_labels)
       for j, (label, start, end) in enumerate(entities):
-        chars_before = sum([len(t) - t.count("#") for t in bert_tokens[:start]])
-        try:
-          ws_before = len(ws_tokens[:min(bert2ws[start])])
-          char_start = chars_before + ws_before
-          ws_inside = len(ws_tokens[min(bert2ws[start]):max(bert2ws[end]) + 1]) - 1
-          char_end = char_start + sum([len(t) - t.count("#") for t in bert_tokens[start:end+1]]) + ws_inside
-          entities[j][1] = char_start
-          entities[j][2] = char_end
-        except ValueError as e:
-          warn("Could not extract entity, empty alignment")
+        # construct regex
+        regex = " *".join([
+          token.replace(
+            self.replace_char, "."
+          ).replace(
+            self.added_chars[self.pretrained_model_name], ""
+          )
+          for token in tokens[start:end+1]
+        ])
+        # find indices
+        matches = [m.span() for m in re.finditer(regex, raw["uncleaned"])]
+        if len(matches) == 1:
+          match = matches[0]
+        elif len(matches) == 0:
+          warn(f"Regex \"{regex}\" did not match in sample {i}")
           continue
-        except IndexError as e:
-          warn("Could not extract entities, overlapping ranges")
-          continue
+        else: 
+          match = self._find_best_match(matches, tokens, start, end)
+        # assgin character spans
+        entities[j][1], entities[j][2] = match
 
       result[str(i)] = {
         "text": raw["text"], "intent": intent,
@@ -182,7 +230,7 @@ class BERTDataModule(pl.LightningDataModule):
           for label, start, end in entities
         },
         "slots": {
-          ID2ENTITY[label][2:]: raw["text"][start:end]
+          ID2ENTITY[label][2:]: raw["uncleaned"][start:end]
           for label, start, end in entities
         }
       }
@@ -191,9 +239,14 @@ class BERTDataModule(pl.LightningDataModule):
 
 if __name__ == "__main__":
   # End to end test for data conversion
-  dm = BERTDataModule(mode="fit", no_split=True)
+  dm = DataModule(mode="fit", no_split=True)
   orig = {
-    str(i): v for i, v in enumerate(dm.data_list)
+    str(i): {
+      key: value
+      for key, value in data.items()
+      if key != "uncleaned"
+    }
+    for i, data in enumerate(dm.data_list)
   }
   reconstruct = dm.format2original(dm.train.data["intent"].tolist(), dm.train.data["token_labels"].tolist())
   errors = [(orig[str(i)], reconstruct[str(i)]) for i in range(len(reconstruct)) if orig[str(i)] != reconstruct[str(i)]]

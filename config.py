@@ -4,13 +4,14 @@ config = {
     "batch_size": 64,
     "bert_lr": 5e-6, 
     "head_lr": 1e-3,
-    "model_name": "bert-base-uncased",
+    "model_name": "roberta-base",
     "train_path": "train.json",
     "dev_path": "dev.json",
     "dev_out_path": "dev_labelled.json",
     "ckpt_path": "model.ckpt",
     "test_size": 0.1,
     "sequence_length": 40,
+    "replace_char": "$"
 }
 
 # Make config values accessible by attribute, e.g. config.batch_size

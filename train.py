@@ -1,14 +1,14 @@
-from data import BERTDataModule
-from model import IntentAndEntityBERT
+from data import DataModule
+from model import IntentAndEntityModel
 from config import *
 
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 import GPUtil
 
-data_module = BERTDataModule()
+data_module = DataModule()
 
-model = IntentAndEntityBERT(
+model = IntentAndEntityModel(
     config.sequence_length, 
     len(UNIQUE_INTENTS),
     len(UNIQUE_ENTITIES),
