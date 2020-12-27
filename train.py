@@ -7,16 +7,13 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 import GPUtil
 
 data_module = DataModule()
+model = IntentAndEntityModel()
 
-model = IntentAndEntityModel(
-    config.sequence_length, 
-    len(UNIQUE_INTENTS),
-    len(UNIQUE_ENTITIES),
-)
+gpus = GPUtil.getAvailable(order='first', limit=1, maxLoad=0.3, maxMemory=0.3)
+print(f"Training on GPUs: {gpus}")
 
 trainer = pl.Trainer(
-    gpus=GPUtil.getAvailable(order='first', limit=4, maxLoad=0.3, maxMemory=0.3), 
-    max_epochs=20, precision=16, 
+    gpus=gpus, max_epochs=20, precision=16, 
     callbacks=[EarlyStopping(monitor='val_loss', mode='min')], 
     checkpoint_callback=False
 )
