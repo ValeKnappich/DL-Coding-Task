@@ -34,6 +34,7 @@ jobs:
       - name: Compile docs
         run: |
           cd docs
+          ls $(python -m site --user-site)
           $(python -m site --user-site)/pydoc-markdown pydoc-markdown.yml --build --site-dir docs
           
       
