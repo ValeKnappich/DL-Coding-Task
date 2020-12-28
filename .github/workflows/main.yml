@@ -24,10 +24,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - run: pip3 install -U pydoc-markdown
+      - run: pip install -U pydoc-markdown
       - run: |
           cd docs
-          python3 -m pydoc-markdown pytorch-markdown.yml --build --site-dir docs
+          python -m pydoc-markdown pytorch-markdown.yml --build --site-dir docs
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
