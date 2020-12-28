@@ -32,13 +32,12 @@ jobs:
       # Install
       - name: Install pydoc-markdown
         run: |
-          pip install pydoc-markdown --user
-          export PATH=/home/runner/.local/bin:$PATH
+          pip3 install pydoc-markdown
 
       - name: Compile docs
         run: |
           cd docs
-          python -m pydoc-markdown pydoc-markdown.yml --build --site-dir docs
+          python3 -m pydoc-markdown pydoc-markdown.yml --build --site-dir docs
           
       
       - name: GitHub Push
