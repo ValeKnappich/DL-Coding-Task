@@ -36,6 +36,7 @@ jobs:
       - name: Compile docs
         run: |
           cd docs
+          ls
           ~/.local/bin/pydoc-markdown pydoc-markdown.yml --build --site-dir docs
           
       
