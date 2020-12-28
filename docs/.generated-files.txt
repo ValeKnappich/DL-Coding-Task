@@ -1,4 +1,4 @@
-md5 0d86a3ed998324bc2b1314df4bbe6349 content/index.md
+md5 1cd166a248536404e999bfc973d3dc91 content/index.md
 md5 3b253b4af7b696eef4c1fa828d0b0cec content/task.md
 md5 604fff6c3c35975aa4c35818d760a760 content/approach.md
 md5 ee483018de05721da5130c355ca19aa5 content/results.md
