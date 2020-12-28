@@ -19,31 +19,49 @@ jobs:
   build-docs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-        
-      # Install Python
-      - name: Install python
-        uses: actions/setup-python@v2
-      
-      # Install
-      - name: Install pydoc-markdown
-        run: |
-          pip3 install pydoc-markdown
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Add conda to system path
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        echo $CONDA/bin >> $GITHUB_PATH
+    # Install
+    - name: Install pydoc-markdown
+      run: |
+        pip install pydoc-markdown
 
-      - name: Compile docs
-        run: |
-          cd docs
-          python3 -m pydoc-markdown pydoc-markdown.yml --build --site-dir docs
+    - name: Compile docs
+      run: |
+        cd docs
+        python -m pydoc-markdown pydoc-markdown.yml --build --site-dir docs
+    # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - uses: actions/checkout@v2
+        
+#       # Install Python
+#       - name: Install python
+#         uses: actions/setup-python@v2
+      
+#       # Install
+#       - name: Install pydoc-markdown
+#         run: |
+#           pip3 install pydoc-markdown
+
+#       - name: Compile docs
+#         run: |
+#           cd docs
+#           python3 -m pydoc-markdown pydoc-markdown.yml --build --site-dir docs
           
       
-      - name: GitHub Push
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          # Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
-          github_token: $\{{ secrets.GITHUB_TOKEN }}
-          # Destination branch to push changes
-          branch: main
+#       - name: GitHub Push
+#         uses: ad-m/github-push-action@v0.6.0
+#         with:
+#           # Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
+#           github_token: $\{{ secrets.GITHUB_TOKEN }}
+#           # Destination branch to push changes
+#           branch: main
