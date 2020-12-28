@@ -29,7 +29,7 @@ jobs:
       - run: pip install -U pydoc-markdown
       - run: |
           cd docs
-          python -m pydoc-markdown pytorch-markdown.yml --build --site-dir docs
+          /home/runner/.local/bin/pydoc-markdown pytorch-markdown.yml --build --site-dir docs
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
