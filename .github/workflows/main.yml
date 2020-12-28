@@ -29,14 +29,12 @@ jobs:
       
       # Install
       - name: Install pydoc-markdown
-        run: |
-          echo $(python -m site --user-site)
-          pip install pydoc-markdown --user
+        run: pip install pydoc-markdown --user
 
       - name: Compile docs
         run: |
           cd docs
-          python -m pydoc-markdown pydoc-markdown.yml --build --site-dir docs
+          $(python -m site --user-site)/pydoc-markdown pydoc-markdown.yml --build --site-dir docs
           
       
       - name: GitHub Push
