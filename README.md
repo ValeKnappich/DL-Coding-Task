@@ -16,5 +16,3 @@ This repository contains my solution to the deep learning coding task from Prof.
 python train.py         # train the model, checkpoint is saved to disk
 python test.py          # loads the dumped model, predicts the classes and outputs the results to disk
 ```
-
-
