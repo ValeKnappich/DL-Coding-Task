@@ -22,14 +22,22 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.6
-      - run: pip install -U pydoc-markdown
-      - run: |
+        
+      # Install Python
+      - name: Install python
+        uses: actions/setup-python@v2
+      
+      # Install
+      - name: Install pydoc-markdown
+        run: pip install pydoc-markdown --user
+
+      - name: Compile docs
+        run: |
           cd docs
-          /home/runner/.local/bin/pydoc-markdown pytorch-markdown.yml --build --site-dir docs
+          python -m pydoc-markdown pytorch-markdown.yml --build --site-dir docs
+      
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
