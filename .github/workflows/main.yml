@@ -34,7 +34,7 @@ jobs:
       - name: Compile docs
         run: |
           cd docs
-          pydoc-markdown pydoc-markdown.yml --build --site-dir docs
+          ~/.local/bin/pydoc-markdown pydoc-markdown.yml --build --site-dir docs
           
       
       - name: GitHub Push
