@@ -33,6 +33,17 @@ renderer:
     site_name: Intent and Entity Classifier
     theme: 
       features:
-        - navigation.tabs
-        - navigation.tabs.sticky
+      - navigation.tabs
+      - navigation.tabs.sticky
+      palette:
+        scheme: default
+        primary: black
       name: material
+    extra:
+      social:
+        - icon: fontawesome/brands/linkedin
+          link: https://www.linkedin.com/in/valentin-knappich-7334341a6/
+          name: LinkedIn Profile
+    repo_url: https://github.com/ValeKnappich/DL-Coding-Task
+    edit_uri: ""
+    site_author: Valentin Knappich

@@ -1,4 +1,10 @@
 docs_dir: content
+edit_uri: ''
+extra:
+  social:
+  - icon: fontawesome/brands/linkedin
+    link: https://www.linkedin.com/in/valentin-knappich-7334341a6/
+    name: LinkedIn Profile
 nav:
 - Home: index.md
 - Task Overview: task.md
@@ -6,9 +12,14 @@ nav:
 - Results: results.md
 - Model API Reference: model-api-reference.md
 - Data API Reference: data-api-reference.md
+repo_url: https://github.com/ValeKnappich/DL-Coding-Task
+site_author: Valentin Knappich
 site_name: Intent and Entity Classifier
 theme:
   features:
   - navigation.tabs
   - navigation.tabs.sticky
   name: material
+  palette:
+    primary: black
+    scheme: default
