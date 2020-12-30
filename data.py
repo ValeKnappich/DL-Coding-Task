@@ -15,13 +15,14 @@ import re
 
 
 class NLUDataSet(Dataset):
-    """Generic Dataset, that holds a dict with columns. Columns are typed as long.
-
-    Args:
-        Dataset (dict): dict holding the columns
-    """
+    """Generic Dataset, that holds a dict with columns"""
 
     def __init__(self, data: dict):
+        """NLUDataset constructor. Converts the columns to tensors of type long.
+
+        Args:
+            data (dict): Dict holding the columns.
+        """
         self.data = {
             field: torch.Tensor(values).long() for field, values in data.items()
         }
@@ -34,13 +35,16 @@ class NLUDataSet(Dataset):
 
 
 class DataModule(pl.LightningDataModule):
-    """Data Module to load data from disk and create DataLoaders
-
-    Args:
-        pl ([type]): [description]
-    """
+    """Data Module to load data from disk and create DataLoaders"""
 
     def __init__(self, mode: str = "fit", no_split: bool = False):
+        """DataModule constructor. Loads config from config.py and binds them to the object.
+        Calls the setup method to load data for the given mode (see below).
+
+        Args:
+            mode (str, optional): Specify to load either training or testing data ("fit" or "test"). Defaults to "fit".
+            no_split (bool, optional): Flag to not perform a random split. Defaults to False.
+        """
         super().__init__()
         self.batch_size = config.batch_size
         self.pretrained_model_name = config.model_name
@@ -55,7 +59,7 @@ class DataModule(pl.LightningDataModule):
         """Load data from disk and remove characters that are not supported by the tokenizer
 
         Returns:
-            data (dict):
+            data (dict): dict containing the columns as long tensors
         """
 
         def replace_all(s, unsupported, replacement=self.replace_char):
@@ -89,7 +93,17 @@ class DataModule(pl.LightningDataModule):
         "roberta-base": "Ġ",
     }
 
-    def setup(self, mode):
+    def setup(self, mode: str):
+        """Load data from disk and create NLUDataSets.
+        Uses the pretrained tokenizer (according to config.config.model_name),
+        uses padding and truncation to get a constant sequence length (config.config.sequence_length).
+
+        Args:
+            mode (str): Specify to load either training or testing data ("fit" or "test").
+
+        Raises:
+            ValueError: If mode is not "fit" or "test".
+        """
         # Load data from disk
         data_dict = self.load_and_clean()
         self.data_list = [data_dict[i] for i in data_dict]
@@ -137,22 +151,45 @@ class DataModule(pl.LightningDataModule):
         else:
             raise ValueError("Invalid mode " + mode)
 
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader:
+        """Create DataLoader from train set.
+
+        Returns:
+             DataLoader: Training Loader
+        """
         return DataLoader(
             self.train, batch_size=self.batch_size, shuffle=True, num_workers=4
         )
 
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader:
+        """Create DataLoader from validation set.
+
+        Returns:
+             DataLoader: Validation Loader
+        """
         return DataLoader(
             self.val, batch_size=self.batch_size, shuffle=False, num_workers=4
         )
 
-    def test_dataloader(self):
+    def test_dataloader(self) -> DataLoader:
+        """Create DataLoader from test set.
+
+        Returns:
+             DataLoader: Test Loader
+        """
         return DataLoader(
             self.test, batch_size=self.batch_size, shuffle=False, num_workers=4
         )
 
-    def format2IOB(self, tokens_matrix):
+    def format2IOB(self, tokens_matrix: torch.Tensor) -> torch.Tensor:
+        """Convert the format from json containig entity spans to IOB format.
+
+        Args:
+            tokens_matrix (torch.Tensor): Tokens created by the tokenizer of shape (num_examples, sequence_length)
+
+        Returns:
+            torch.Tensor: Token labels of shape (num_examples, sequence_length)
+        """
         added_char = self.added_chars[self.pretrained_model_name]
         token_labels = []
         for instance, tokens in zip(self.data_list, tokens_matrix):
@@ -189,11 +226,18 @@ class DataModule(pl.LightningDataModule):
                         token_labels_sentence[i + 1 : i + token_count + 1] = [
                             inside_token for _ in range(token_count)
                         ]
-                        break
             token_labels.append(token_labels_sentence)
         return token_labels
 
-    def _get_entities(self, token_labels):
+    def _get_entities(self, token_labels: torch.Tensor) -> List[list]:
+        """Get entities from token labels.
+
+        Args:
+            token_labels (torch.Tensor): token labels created by format2IOB.
+
+        Returns:
+            List[list]: List of lists of format [label, start, stop] where label is the encoded beginning token.
+        """
         is_inside = lambda l: l % 2 == 1
         is_outside = lambda l: l == ENTITY2ID["O"]
         is_begin = lambda l: l % 2 == 0 and not l == ENTITY2ID["O"]
@@ -222,14 +266,39 @@ class DataModule(pl.LightningDataModule):
             warn("Multiple entries for the same entity")
         return entities
 
-    def _find_best_match(self, matches, tokens, t_start, t_end):
+    def _find_best_match(
+        self, matches: List[Tuple[int, int]], tokens: list, t_start: int, t_end: int
+    ) -> Tuple[int, int]:
+        """Find the best match of a regex according to how close the indices are to the original indices.
+        Indices should match perfectly for RoBERTa, which is not nessecarily the case for BERT tokens.
+
+        Args:
+            matches (List[Tuple[int, int]]): List of spans from regex matches, containing start and end indices
+            tokens (list): List of tokens
+            t_start (int): Index of the begin token of the entity
+            t_end (int): Index of the last inside token of the entity
+
+        Returns:
+            Tuple[int, int]: Tuple containing the character indices of the original utterance
+        """
         # If regex matches multiple times, choose best
         if self.pretrained_model_name != "roberta-base":
             warn("Model not supported in _find_best_match")
         num_chars = sum([len(t) for t in tokens[: t_end + 1]])
         return sorted(matches, key=lambda m: abs(m[1] - num_chars))[0]
 
-    def format2original(self, intents, token_labels_matrix):
+    def format2original(
+        self, intents: torch.Tensor, token_labels_matrix: torch.Tensor
+    ) -> dict:
+        """Format back to the original JSON format.
+
+        Args:
+            intents (torch.Tensor): Tensor of the predicted intent-ID's
+            token_labels_matrix (torch.Tensor): Tensor of the tokens
+
+        Returns:
+            dict: results in the original JSON format
+        """
         result = {}
         intents = [ID2INTENT[intent] for intent in intents]
         for i, (intent, token_labels, raw) in enumerate(

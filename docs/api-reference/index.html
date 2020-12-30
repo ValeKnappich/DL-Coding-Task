@@ -492,19 +492,31 @@
 <h2 id="nludataset-objects">NLUDataSet Objects</h2>
 <pre><code class="language-python">class NLUDataSet(Dataset)
 </code></pre>
-<p>Generic Dataset, that holds a dict with columns. Columns are typed as long.</p>
+<p>Generic Dataset, that holds a dict with columns</p>
+<p><a name="data.NLUDataSet.__init__"></a></p>
+<h4 id="__init__">__init__</h4>
+<pre><code class="language-python"> | __init__(data: dict)
+</code></pre>
+<p>NLUDataset constructor. Converts the columns to tensors of type long.</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>Dataset</code> <em>dict</em> - dict holding the columns</li>
+<li><code>data</code> <em>dict</em> - Dict holding the columns.</li>
 </ul>
 <p><a name="data.DataModule"></a></p>
 <h2 id="datamodule-objects">DataModule Objects</h2>
 <pre><code class="language-python">class DataModule(pl.LightningDataModule)
 </code></pre>
 <p>Data Module to load data from disk and create DataLoaders</p>
+<p><a name="data.DataModule.__init__"></a></p>
+<h4 id="__init___1">__init__</h4>
+<pre><code class="language-python"> | __init__(mode: str = &quot;fit&quot;, no_split: bool = False)
+</code></pre>
+<p>DataModule constructor. Loads config from config.py and binds them to the object.
+Calls the setup method to load data for the given mode (see below).</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>pl</code> <em>[type]</em> - [description]</li>
+<li><code>mode</code> <em>str, optional</em> - Specify to load either training or testing data ("fit" or "test"). Defaults to "fit".</li>
+<li><code>no_split</code> <em>bool, optional</em> - Flag to not perform a random split. Defaults to False.</li>
 </ul>
 <p><a name="data.DataModule.load_and_clean"></a></p>
 <h4 id="load_and_clean">load_and_clean</h4>
@@ -512,7 +524,78 @@
 </code></pre>
 <p>Load data from disk and remove characters that are not supported by the tokenizer</p>
 <p><strong>Returns</strong>:</p>
-<p>data (dict):</p>
+<ul>
+<li><code>data</code> <em>dict</em> - dict containing the columns as long tensors</li>
+</ul>
+<p><a name="data.DataModule.setup"></a></p>
+<h4 id="setup">setup</h4>
+<pre><code class="language-python"> | setup(mode: str)
+</code></pre>
+<p>Load data from disk and create NLUDataSets.
+Uses the pretrained tokenizer (according to config.config.model_name),
+uses padding and truncation to get a constant sequence length (config.config.sequence_length).</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>mode</code> <em>str</em> - Specify to load either training or testing data ("fit" or "test").</li>
+</ul>
+<p><strong>Raises</strong>:</p>
+<ul>
+<li><code>ValueError</code> - If mode is not "fit" or "test".</li>
+</ul>
+<p><a name="data.DataModule.train_dataloader"></a></p>
+<h4 id="train_dataloader">train_dataloader</h4>
+<pre><code class="language-python"> | train_dataloader() -&gt; DataLoader
+</code></pre>
+<p>Create DataLoader from train set.</p>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>DataLoader</code> - Training Loader</li>
+</ul>
+<p><a name="data.DataModule.val_dataloader"></a></p>
+<h4 id="val_dataloader">val_dataloader</h4>
+<pre><code class="language-python"> | val_dataloader() -&gt; DataLoader
+</code></pre>
+<p>Create DataLoader from validation set.</p>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>DataLoader</code> - Validation Loader</li>
+</ul>
+<p><a name="data.DataModule.test_dataloader"></a></p>
+<h4 id="test_dataloader">test_dataloader</h4>
+<pre><code class="language-python"> | test_dataloader() -&gt; DataLoader
+</code></pre>
+<p>Create DataLoader from test set.</p>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>DataLoader</code> - Test Loader</li>
+</ul>
+<p><a name="data.DataModule.format2IOB"></a></p>
+<h4 id="format2iob">format2IOB</h4>
+<pre><code class="language-python"> | format2IOB(tokens_matrix: torch.Tensor) -&gt; torch.Tensor
+</code></pre>
+<p>Convert the format from json containig entity spans to IOB format.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>tokens_matrix</code> <em>torch.Tensor</em> - Tokens created by the tokenizer of shape (num_examples, sequence_length)</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>torch.Tensor</code> - Token labels of shape (num_examples, sequence_length)</li>
+</ul>
+<p><a name="data.DataModule.format2original"></a></p>
+<h4 id="format2original">format2original</h4>
+<pre><code class="language-python"> | format2original(intents: torch.Tensor, token_labels_matrix: torch.Tensor) -&gt; dict
+</code></pre>
+<p>Format back to the original JSON format.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>intents</code> <em>torch.Tensor</em> - Tensor of the predicted intent-ID's</li>
+<li><code>token_labels_matrix</code> <em>torch.Tensor</em> - Tensor of the tokens</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>dict</code> - results in the original JSON format</li>
+</ul>
 <p><a name="train"></a></p>
 <h1 id="train">train</h1>
                 
