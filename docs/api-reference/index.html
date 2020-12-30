@@ -422,7 +422,7 @@
 <li><code>attention_mask</code> <em>torch.Tensor</em> - [description]</li>
 </ul>
 <p><strong>Returns</strong>:</p>
-<p>Tuple[torch.Tensor, torch.Tensor]: [description]</p>
+<p>intent_logits, ner_logits (Tuple[torch.Tensor, torch.Tensor]): Logits of the intent and NER heads before Softmax</p>
 <p><a name="model.IntentAndEntityModel.configure_optimizers"></a></p>
 <h4 id="configure_optimizers">configure_optimizers</h4>
 <pre><code class="language-python"> | configure_optimizers() -&gt; Tuple[
@@ -488,19 +488,31 @@
 <h1 id="config">config</h1>
 <p><a name="data"></a></p>
 <h1 id="data">data</h1>
+<p><a name="data.NLUDataSet"></a></p>
+<h2 id="nludataset-objects">NLUDataSet Objects</h2>
+<pre><code class="language-python">class NLUDataSet(Dataset)
+</code></pre>
+<p>Generic Dataset, that holds a dict with columns. Columns are typed as long.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>Dataset</code> <em>dict</em> - dict holding the columns</li>
+</ul>
 <p><a name="data.DataModule"></a></p>
 <h2 id="datamodule-objects">DataModule Objects</h2>
 <pre><code class="language-python">class DataModule(pl.LightningDataModule)
 </code></pre>
+<p>Data Module to load data from disk and create DataLoaders</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>pl</code> <em>[type]</em> - [description]</li>
+</ul>
 <p><a name="data.DataModule.load_and_clean"></a></p>
 <h4 id="load_and_clean">load_and_clean</h4>
 <pre><code class="language-python"> | load_and_clean() -&gt; dict
 </code></pre>
 <p>Load data from disk and remove characters that are not supported by the tokenizer</p>
 <p><strong>Returns</strong>:</p>
-<ul>
-<li><code>dict</code> - [description]</li>
-</ul>
+<p>data (dict):</p>
 <p><a name="train"></a></p>
 <h1 id="train">train</h1>
                 
