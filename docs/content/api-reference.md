@@ -25,7 +25,7 @@ Forward pass
 
 **Returns**:
 
-  Tuple[torch.Tensor, torch.Tensor]: [description]
+  intent_logits, ner_logits (Tuple[torch.Tensor, torch.Tensor]): Logits of the intent and NER heads before Softmax
 
 <a name="model.IntentAndEntityModel.configure_optimizers"></a>
 #### configure\_optimizers
@@ -121,12 +121,31 @@ Validation step
 <a name="data"></a>
 # data
 
+<a name="data.NLUDataSet"></a>
+## NLUDataSet Objects
+
+```python
+class NLUDataSet(Dataset)
+```
+
+Generic Dataset, that holds a dict with columns. Columns are typed as long.
+
+**Arguments**:
+
+- `Dataset` _dict_ - dict holding the columns
+
 <a name="data.DataModule"></a>
 ## DataModule Objects
 
 ```python
 class DataModule(pl.LightningDataModule)
 ```
+
+Data Module to load data from disk and create DataLoaders
+
+**Arguments**:
+
+- `pl` _[type]_ - [description]
 
 <a name="data.DataModule.load_and_clean"></a>
 #### load\_and\_clean
@@ -139,7 +158,7 @@ Load data from disk and remove characters that are not supported by the tokenize
 
 **Returns**:
 
-- `dict` - [description]
+  data (dict):
 
 <a name="train"></a>
 # train

@@ -15,6 +15,12 @@ import re
 
 
 class NLUDataSet(Dataset):
+    """Generic Dataset, that holds a dict with columns. Columns are typed as long.
+
+    Args:
+        Dataset (dict): dict holding the columns
+    """
+
     def __init__(self, data: dict):
         self.data = {
             field: torch.Tensor(values).long() for field, values in data.items()
@@ -28,6 +34,12 @@ class NLUDataSet(Dataset):
 
 
 class DataModule(pl.LightningDataModule):
+    """Data Module to load data from disk and create DataLoaders
+
+    Args:
+        pl ([type]): [description]
+    """
+
     def __init__(self, mode: str = "fit", no_split: bool = False):
         super().__init__()
         self.batch_size = config.batch_size
@@ -43,7 +55,7 @@ class DataModule(pl.LightningDataModule):
         """Load data from disk and remove characters that are not supported by the tokenizer
 
         Returns:
-            dict: [description]
+            data (dict):
         """
 
         def replace_all(s, unsupported, replacement=self.replace_char):

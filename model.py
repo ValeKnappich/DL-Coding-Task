@@ -38,7 +38,7 @@ class IntentAndEntityModel(pl.LightningModule):
             attention_mask (torch.Tensor): [description]
 
         Returns:
-            Tuple[torch.Tensor, torch.Tensor]: [description]
+            intent_logits, ner_logits (Tuple[torch.Tensor, torch.Tensor]): Logits of the intent and NER heads before Softmax
         """
         batch_size = input_ids.shape[0]  # = self.batch_size except for last batch
         bert_output = self.bert(input_ids, attention_mask)
