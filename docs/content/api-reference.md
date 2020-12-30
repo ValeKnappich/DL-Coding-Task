@@ -8,6 +8,16 @@
 class IntentAndEntityModel(pl.LightningModule)
 ```
 
+<a name="model.IntentAndEntityModel.__init__"></a>
+#### \_\_init\_\_
+
+```python
+ | __init__()
+```
+
+IntentAndEntityModel constructor. Loads the config from config.py and binds it to the object.
+Create Layers, including pretrained, as specified in config.config.model_name
+
 <a name="model.IntentAndEntityModel.forward"></a>
 #### forward
 
@@ -19,8 +29,8 @@ Forward pass
 
 **Arguments**:
 
-- `input_ids` _torch.Tensor_ - [description]
-- `attention_mask` _torch.Tensor_ - [description]
+- `input_ids` _torch.Tensor_ - Input ID's created by the tokenizer of shape (batch_size, sequence_length)
+- `attention_mask` _torch.Tensor_ - Attention masks created by the tokenizer of shape (batch_size, sequence_length)
   
 
 **Returns**:
@@ -40,7 +50,7 @@ Configure optimizer and lr scheduler
 
 **Returns**:
 
-  Tuple[List[torch.optim.Optimizer], List[torch.optim.lr_scheduler._LRScheduler]]: [description]
+  Tuple[List[torch.optim.Optimizer], List[torch.optim.lr_scheduler._LRScheduler]]: Optimizer and LR Scheduler
 
 <a name="model.IntentAndEntityModel.loss"></a>
 #### loss
@@ -53,15 +63,15 @@ Calculate the individual losses for intent and ner respectively
 
 **Arguments**:
 
-- `intent_logits` _torch.Tensor_ - [description]
-- `ner_logits` _torch.Tensor_ - [description]
-- `intent_labels` _torch.Tensor_ - [description]
-- `ner_labels` _torch.Tensor_ - [description]
+- `intent_logits` _torch.Tensor_ - Intent logits before SoftMax
+- `ner_logits` _torch.Tensor_ - NER logits before SoftMax
+- `intent_labels` _torch.Tensor_ - Predicted intent-ID's
+- `ner_labels` _torch.Tensor_ - Predicted token labels
   
 
 **Returns**:
 
-  Tuple[torch.Tensor, torch.Tensor]: [description]
+  Tuple[torch.Tensor, torch.Tensor]: Intent loss and NER loss
 
 <a name="model.IntentAndEntityModel.accuracy"></a>
 #### accuracy
@@ -74,13 +84,13 @@ Calculate accuracy for logits and labels
 
 **Arguments**:
 
-- `logits` _torch.Tensor_ - [description]
-- `labels` _torch.Tensor_ - [description]
+- `logits` _torch.Tensor_ - Logits
+- `labels` _torch.Tensor_ - True labels
   
 
 **Returns**:
 
-- `float` - [description]
+- `float` - Accuracy
 
 <a name="model.IntentAndEntityModel.training_step"></a>
 #### training\_step
@@ -93,13 +103,13 @@ Training step
 
 **Arguments**:
 
-- `batch` _dict_ - [description]
-- `batch_idx` _int_ - [description]
+- `batch` _dict_ - Dict containing the columns of the batch
+- `batch_idx` _int_ - Batch index
   
 
 **Returns**:
 
-- `torch.Tensor` - [description]
+- `torch.Tensor` - Combined loss as mean between intent and NER loss
 
 <a name="model.IntentAndEntityModel.validation_step"></a>
 #### validation\_step
@@ -112,8 +122,8 @@ Validation step
 
 **Arguments**:
 
-- `batch` _dict_ - [description]
-- `batch_idx` _int_ - [description]
+- `batch` _dict_ - Dict containing the columns of the batch
+- `batch_idx` _int_ - Batch index
 
 <a name="config"></a>
 # config

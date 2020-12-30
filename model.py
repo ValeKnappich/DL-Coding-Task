@@ -14,6 +14,9 @@ from typing import Tuple, Union, List
 
 class IntentAndEntityModel(pl.LightningModule):
     def __init__(self):
+        """IntentAndEntityModel constructor. Loads the config from config.py and binds it to the object.
+        Create Layers, including pretrained, as specified in config.config.model_name
+        """
         super().__init__()
         self.batch_size = config.batch_size
         self.bert_lr = config.bert_lr
@@ -34,8 +37,8 @@ class IntentAndEntityModel(pl.LightningModule):
         """Forward pass
 
         Args:
-            input_ids (torch.Tensor): [description]
-            attention_mask (torch.Tensor): [description]
+            input_ids (torch.Tensor): Input ID's created by the tokenizer of shape (batch_size, sequence_length)
+            attention_mask (torch.Tensor): Attention masks created by the tokenizer of shape (batch_size, sequence_length)
 
         Returns:
             intent_logits, ner_logits (Tuple[torch.Tensor, torch.Tensor]): Logits of the intent and NER heads before Softmax
@@ -61,7 +64,7 @@ class IntentAndEntityModel(pl.LightningModule):
         """Configure optimizer and lr scheduler
 
         Returns:
-            Tuple[List[torch.optim.Optimizer], List[torch.optim.lr_scheduler._LRScheduler]]: [description]
+            Tuple[List[torch.optim.Optimizer], List[torch.optim.lr_scheduler._LRScheduler]]: Optimizer and LR Scheduler
         """
         opt = torch.optim.Adam(
             [
@@ -90,13 +93,13 @@ class IntentAndEntityModel(pl.LightningModule):
         """Calculate the individual losses for intent and ner respectively
 
         Args:
-            intent_logits (torch.Tensor): [description]
-            ner_logits (torch.Tensor): [description]
-            intent_labels (torch.Tensor): [description]
-            ner_labels (torch.Tensor): [description]
+            intent_logits (torch.Tensor): Intent logits before SoftMax
+            ner_logits (torch.Tensor): NER logits before SoftMax
+            intent_labels (torch.Tensor): Predicted intent-ID's
+            ner_labels (torch.Tensor): Predicted token labels
 
         Returns:
-            Tuple[torch.Tensor, torch.Tensor]: [description]
+            Tuple[torch.Tensor, torch.Tensor]: Intent loss and NER loss
         """
         intent_loss = F.cross_entropy(intent_logits, intent_labels)
         ner_loss = F.cross_entropy(  # process all tokens at once as bigger batch
@@ -109,11 +112,11 @@ class IntentAndEntityModel(pl.LightningModule):
         """Calculate accuracy for logits and labels
 
         Args:
-            logits (torch.Tensor): [description]
-            labels (torch.Tensor): [description]
+            logits (torch.Tensor): Logits
+            labels (torch.Tensor): True labels
 
         Returns:
-            float: [description]
+            float: Accuracy
         """
         labels_pred = torch.argmax(F.softmax(logits, dim=1), dim=1)
         correct = labels_pred == labels
@@ -123,11 +126,11 @@ class IntentAndEntityModel(pl.LightningModule):
         """Training step
 
         Args:
-            batch (dict): [description]
-            batch_idx (int): [description]
+            batch (dict): Dict containing the columns of the batch
+            batch_idx (int): Batch index
 
         Returns:
-            torch.Tensor: [description]
+            torch.Tensor: Combined loss as mean between intent and NER loss
         """
         intent_logits, ner_logits = self.forward(
             batch["input_ids"], batch["attention_mask"]
@@ -152,8 +155,8 @@ class IntentAndEntityModel(pl.LightningModule):
         """Validation step
 
         Args:
-            batch (dict): [description]
-            batch_idx (int): [description]
+            batch (dict): Dict containing the columns of the batch
+            batch_idx (int): Batch index
         """
         intent_logits, ner_logits = self.forward(
             batch["input_ids"], batch["attention_mask"]

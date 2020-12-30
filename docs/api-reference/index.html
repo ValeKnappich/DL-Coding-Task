@@ -260,6 +260,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#__init__" class="md-nav__link">
+    __init__
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#forward" class="md-nav__link">
     forward
   </a>
@@ -346,6 +353,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#__init__" class="md-nav__link">
+    __init__
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#forward" class="md-nav__link">
     forward
   </a>
@@ -411,6 +425,12 @@
 <h2 id="intentandentitymodel-objects">IntentAndEntityModel Objects</h2>
 <pre><code class="language-python">class IntentAndEntityModel(pl.LightningModule)
 </code></pre>
+<p><a name="model.IntentAndEntityModel.__init__"></a></p>
+<h4 id="__init__">__init__</h4>
+<pre><code class="language-python"> | __init__()
+</code></pre>
+<p>IntentAndEntityModel constructor. Loads the config from config.py and binds it to the object.
+Create Layers, including pretrained, as specified in config.config.model_name</p>
 <p><a name="model.IntentAndEntityModel.forward"></a></p>
 <h4 id="forward">forward</h4>
 <pre><code class="language-python"> | forward(input_ids: torch.Tensor, attention_mask: torch.Tensor) -&gt; Tuple[torch.Tensor, torch.Tensor]
@@ -418,8 +438,8 @@
 <p>Forward pass</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>input_ids</code> <em>torch.Tensor</em> - [description]</li>
-<li><code>attention_mask</code> <em>torch.Tensor</em> - [description]</li>
+<li><code>input_ids</code> <em>torch.Tensor</em> - Input ID's created by the tokenizer of shape (batch_size, sequence_length)</li>
+<li><code>attention_mask</code> <em>torch.Tensor</em> - Attention masks created by the tokenizer of shape (batch_size, sequence_length)</li>
 </ul>
 <p><strong>Returns</strong>:</p>
 <p>intent_logits, ner_logits (Tuple[torch.Tensor, torch.Tensor]): Logits of the intent and NER heads before Softmax</p>
@@ -431,7 +451,7 @@
 </code></pre>
 <p>Configure optimizer and lr scheduler</p>
 <p><strong>Returns</strong>:</p>
-<p>Tuple[List[torch.optim.Optimizer], List[torch.optim.lr_scheduler._LRScheduler]]: [description]</p>
+<p>Tuple[List[torch.optim.Optimizer], List[torch.optim.lr_scheduler._LRScheduler]]: Optimizer and LR Scheduler</p>
 <p><a name="model.IntentAndEntityModel.loss"></a></p>
 <h4 id="loss">loss</h4>
 <pre><code class="language-python"> | loss(intent_logits: torch.Tensor, ner_logits: torch.Tensor, intent_labels: torch.Tensor, ner_labels: torch.Tensor) -&gt; Tuple[torch.Tensor, torch.Tensor]
@@ -439,13 +459,13 @@
 <p>Calculate the individual losses for intent and ner respectively</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>intent_logits</code> <em>torch.Tensor</em> - [description]</li>
-<li><code>ner_logits</code> <em>torch.Tensor</em> - [description]</li>
-<li><code>intent_labels</code> <em>torch.Tensor</em> - [description]</li>
-<li><code>ner_labels</code> <em>torch.Tensor</em> - [description]</li>
+<li><code>intent_logits</code> <em>torch.Tensor</em> - Intent logits before SoftMax</li>
+<li><code>ner_logits</code> <em>torch.Tensor</em> - NER logits before SoftMax</li>
+<li><code>intent_labels</code> <em>torch.Tensor</em> - Predicted intent-ID's</li>
+<li><code>ner_labels</code> <em>torch.Tensor</em> - Predicted token labels</li>
 </ul>
 <p><strong>Returns</strong>:</p>
-<p>Tuple[torch.Tensor, torch.Tensor]: [description]</p>
+<p>Tuple[torch.Tensor, torch.Tensor]: Intent loss and NER loss</p>
 <p><a name="model.IntentAndEntityModel.accuracy"></a></p>
 <h4 id="accuracy">accuracy</h4>
 <pre><code class="language-python"> | accuracy(logits: torch.Tensor, labels: torch.Tensor) -&gt; float
@@ -453,12 +473,12 @@
 <p>Calculate accuracy for logits and labels</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>logits</code> <em>torch.Tensor</em> - [description]</li>
-<li><code>labels</code> <em>torch.Tensor</em> - [description]</li>
+<li><code>logits</code> <em>torch.Tensor</em> - Logits</li>
+<li><code>labels</code> <em>torch.Tensor</em> - True labels</li>
 </ul>
 <p><strong>Returns</strong>:</p>
 <ul>
-<li><code>float</code> - [description]</li>
+<li><code>float</code> - Accuracy</li>
 </ul>
 <p><a name="model.IntentAndEntityModel.training_step"></a></p>
 <h4 id="training_step">training_step</h4>
@@ -467,12 +487,12 @@
 <p>Training step</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>batch</code> <em>dict</em> - [description]</li>
-<li><code>batch_idx</code> <em>int</em> - [description]</li>
+<li><code>batch</code> <em>dict</em> - Dict containing the columns of the batch</li>
+<li><code>batch_idx</code> <em>int</em> - Batch index</li>
 </ul>
 <p><strong>Returns</strong>:</p>
 <ul>
-<li><code>torch.Tensor</code> - [description]</li>
+<li><code>torch.Tensor</code> - Combined loss as mean between intent and NER loss</li>
 </ul>
 <p><a name="model.IntentAndEntityModel.validation_step"></a></p>
 <h4 id="validation_step">validation_step</h4>
@@ -481,8 +501,8 @@
 <p>Validation step</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>batch</code> <em>dict</em> - [description]</li>
-<li><code>batch_idx</code> <em>int</em> - [description]</li>
+<li><code>batch</code> <em>dict</em> - Dict containing the columns of the batch</li>
+<li><code>batch_idx</code> <em>int</em> - Batch index</li>
 </ul>
 <p><a name="config"></a></p>
 <h1 id="config">config</h1>
@@ -494,7 +514,7 @@
 </code></pre>
 <p>Generic Dataset, that holds a dict with columns</p>
 <p><a name="data.NLUDataSet.__init__"></a></p>
-<h4 id="__init__">__init__</h4>
+<h4 id="__init___1">__init__</h4>
 <pre><code class="language-python"> | __init__(data: dict)
 </code></pre>
 <p>NLUDataset constructor. Converts the columns to tensors of type long.</p>
@@ -508,7 +528,7 @@
 </code></pre>
 <p>Data Module to load data from disk and create DataLoaders</p>
 <p><a name="data.DataModule.__init__"></a></p>
-<h4 id="__init___1">__init__</h4>
+<h4 id="__init___2">__init__</h4>
 <pre><code class="language-python"> | __init__(mode: str = &quot;fit&quot;, no_split: bool = False)
 </code></pre>
 <p>DataModule constructor. Loads config from config.py and binds them to the object.
