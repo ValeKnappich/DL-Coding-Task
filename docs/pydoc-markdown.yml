@@ -22,24 +22,17 @@ renderer:
     - title: Results
       name: results
       source: results.md
-    - title: API Reference
+    - title: Model API Reference
       contents:
-      - "*"
-    # - title: Model
-    #   contents:
-    #   - model.*
-    # - title: Training
-    #   contents:
-    #   - train.*
-    # - title: Data
-    #   contents:
-    #   - data.*
-    # - title: Config
-    #   contents:
-    #   - config.*
-    # - title: Test
-    #   contents:
-    #   - test.*
+      - model.*
+    - title: Data API Reference
+      contents:
+      - data.*
+
   mkdocs_config:
     site_name: Intent and Entity Classifier
-    theme: material 
+    theme: 
+      features:
+        - navigation.tabs
+        - navigation.tabs.sticky
+      name: material

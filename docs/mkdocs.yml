@@ -4,6 +4,11 @@ nav:
 - Task Overview: task.md
 - Approach Overview: approach.md
 - Results: results.md
-- API Reference: api-reference.md
+- Model API Reference: model-api-reference.md
+- Data API Reference: data-api-reference.md
 site_name: Intent and Entity Classifier
-theme: material
+theme:
+  features:
+  - navigation.tabs
+  - navigation.tabs.sticky
+  name: material
